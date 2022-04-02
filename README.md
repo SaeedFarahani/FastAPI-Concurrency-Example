@@ -36,12 +36,35 @@ Data validation and settings management using python type annotations.
 
 pydantic enforces type hints at runtime, and provides user-friendly errors when data is invalid.
 
+### Traefik
+
+Next, let's add Traefik, a reverse proxy, into the mix.
+
+New to Traefik? Check out the offical Getting Started guide.
+
+Traefik vs Nginx: Traefik is a modern, HTTP reverse proxy and load balancer. It's often compared to Nginx, a web server and reverse proxy. Since Nginx is primarily a webserver, it can be used to serve up a webpage as well as serve as a reverse proxy and load balancer. In general, Traefik is simpler to get up and running while Nginx is more versatile.
+
+
+Traefik:
+
+Reverse proxy and load balancer
+Automatically issues and renews SSL certificates, via Let's Encrypt, out-of-the-box
+Use Traefik for simple, Docker-based microservices
+
+
+Nginx:
+
+Web server, reverse proxy, and load balancer
+Slightly faster than Traefik
+Use Nginx for complex services
+
+
 ## Setting up the VirtualEnv and install dependencies
 
 Go inside the project folder and execute the below commands. 
 ```
-pipenv shell
-pipenv install
+docker build -t myimage .
+docker run -d --name mycontainer -p 8080:8080 myimage
 
 ```
 
@@ -69,41 +92,5 @@ pytest
 ```
 
 
-The server will start at <http://localhost:9000/docs>.
+The server will start at <http://localhost:9000/docs> 
 
-## Configuration 
-
-Support for other storage formats & destinations should not require significant code changes in
-order to be added (Example formats: json, xml, bytes etc. Example destinations: local drive, ftp,
-cloud storage etc).
-
-we can set any config of destinations in config.py and support any of data by use mapper module in mapper.py
-
-
-config.py
-```
-def get_postgres_uri():
-    host = os.environ.get("DB_HOST", "localhost")
-    port = 5432 if host == "localhost" else 5432
-    password = os.environ.get("DB_PASSWORD", "Saeed12#$")
-    user, db_name = "saeed", "DataRepository"
-    return f"postgresql://{user}:{password}@{host}:{port}/{db_name}"
-
-
-def get_sqlite_uri():
-    return "sqlite:///../data/data.db"
-
-```
-
-mapper to convert xml, json etc to python dict type
-
-```
-class XMLMapper(AbstractMapper):
-    def convert(self, data):
-        return xmltodict.parse(data)
-
-
-class JSONMapper(AbstractMapper):
-    def convert(self, data):
-        return data
-```
